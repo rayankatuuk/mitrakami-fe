@@ -6,6 +6,8 @@ import { buildApiUrl } from "../services/apiClient";
 import MobileBottomNav from "../components/MobileBottomNav";
 import { resolvePackageAvatarPath } from "../utils/memberPackageAvatar";
 import AppIcon from "../components/AppIcon";
+import { Bell, Plus, ScanLine } from "lucide-react";
+import "./DashboardPage.css";
 
 const PAYMENT_ITEMS = [
   {
@@ -229,157 +231,157 @@ export default function DashboardPage({ currentTab = "home" }) {
   };
 
   return (
-    <div className="min-h-screen bg-background-app text-text-primary">
-      <div className="mx-auto w-full max-w-md min-h-screen bg-background-app relative overflow-hidden pb-28">
-        <header className="px-6 pt-12 pb-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <img
-                src={displayAvatar}
-                alt="User avatar"
-                className="size-14 rounded-full object-cover"
-              />
-              <span className="absolute bottom-0 right-0 size-3 rounded-full bg-emerald-500 border-2 border-white" />
+    <main className="dashboard-page">
+      <div className="dashboard-shell">
+        <header className="dashboard-hero">
+          <div className="dashboard-hero-sweep" aria-hidden="true" />
+          <div className="dashboard-header-row">
+            <div className="dashboard-member">
+              <div className="dashboard-avatar-wrap">
+                <img src={displayAvatar} alt="Foto profil" className="dashboard-avatar" />
+                <span className="dashboard-online-dot" />
+              </div>
+              <div className="dashboard-member-copy">
+                <p>Halo,</p>
+                <h1>{displayName}</h1>
+                <span className="dashboard-member-badge">♛ {displayPackage}</span>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-text-secondary">Halo,</p>
-              <h1 className="text-xl font-bold leading-tight">{displayName}</h1>
+
+            <div className="dashboard-brand-tools">
+              <div className="dashboard-wordmark" aria-label="MitraKami SuperApp">
+                <span>Mitra<span>Kami</span></span>
+                <small>SUPERAPP</small>
+              </div>
+              <div className="dashboard-utility-icons" aria-hidden="true">
+                <span className="dashboard-notification-icon"><Bell size={22} strokeWidth={2} /><i>3</i></span>
+                <ScanLine size={24} strokeWidth={2} />
+              </div>
             </div>
           </div>
+          <p className="dashboard-motto">Bersama MitraKami, Membangun Indonesia</p>
         </header>
 
-        <section className="px-6 mb-8">
-          <div className="rounded-3xl bg-white p-5 shadow-soft border border-black/5">
-            <p className="text-sm text-text-secondary mb-2 font-bold">
-              {displayPackage}
-            </p>
-
-            <div className="flex flex-row justify-between">
-              <div>
-                <div className="flex items-center gap-2 text-text-secondary mb-1">
-              <span className="text-sm">Total Saldo</span>
-              <button
-                type="button"
-                onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-                className="cursor-pointer hover:text-text-primary transition-colors"
-                aria-label={isBalanceVisible ? "Hide balance" : "Show balance"}
-              >
-                <AppIcon
-                  name={isBalanceVisible ? "visibility" : "visibility_off"}
-                  className="size-4"
-                />
-              </button>
-            </div>
-
-            <h2 className="text-xl font-bold tracking-tight mb-5">
-              {isBalanceVisible ? formatCurrency(displayBalance) : "Rp ******"}
-            </h2>
-
-              </div>
-              
-
-            <div className="flex pr-2">
-              <button
-                className="flex flex-col items-center gap-2 active:scale-95 transition-transform"
-                type="button"
-                onClick={() => navigate('/app/topup')}
-              >
-                <span className="size-10 rounded-full bg-primary-soft text-primary grid place-items-center">
-                  <AppIcon name="wallet" className="size-5" />
-                </span>
-                <span className="text-xs font-medium text-text-secondary">
-                  Top Up
-                </span>
-              </button>
-            </div>
-
-            </div>
-
-            
-          </div>
-        </section>
-
-        <section className="px-6 mb-8">
-          <h3 className="text-xl font-bold mb-5">Pembayaran & Tagihan</h3>
-          <div className="grid grid-cols-4 gap-y-6 gap-x-2">
-            {PAYMENT_ITEMS.map((item) => {
-              return (
+        <section className="dashboard-balance-card" aria-label="Informasi saldo">
+          <div className="dashboard-balance-top">
+            <div className="dashboard-balance-icon"><AppIcon name="account_balance_wallet" /></div>
+            <div className="dashboard-balance-copy">
+              <div className="dashboard-balance-label">
+                <span>Saldo MitraKami</span>
                 <button
-                  key={item.label}
                   type="button"
-                  onClick={() => handlePaymentItemClick(item)}
-                  className="flex flex-col items-center gap-2 group"
+                  onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+                  aria-label={isBalanceVisible ? "Hide balance" : "Show balance"}
                 >
-                  <span
-                    className={`size-16 rounded-full border ${item.bg} grid place-items-center transition-colors group-hover:bg-white`}
-                  >
-                    <AppIcon
-                      name={item.icon}
-                      className={`size-7.5 ${item.color}`}
-                    />
-                  </span>
-                  <span className="text-sm text-text-secondary font-medium">
-                    {item.label}
-                  </span>
+                  <AppIcon name={isBalanceVisible ? "visibility" : "visibility_off"} />
                 </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="pl-6 mb-8">
-          <div className="pr-6 flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">Mitra UMKM</h3>
-            <button
-              type="button"
-              className="text-primary font-semibold inline-flex items-center gap-1 text-sm"
-            >
-              Lihat Semua
-              <AppIcon name="chevron_right" className="size-4" />
+              </div>
+              <h2>{isBalanceVisible ? formatCurrency(displayBalance) : "Rp ******"}</h2>
+            </div>
+            <button className="dashboard-topup-button" type="button" onClick={() => navigate('/app/topup')}>
+              <Plus /> Top Up
             </button>
           </div>
-          <div className="flex gap-4 overflow-x-auto no-scrollbar pr-6 pb-2">
-            {STORE_ITEMS.map((item) => (
-              <article
-                key={item.title}
-                className="min-w-42.5 h-62.5 rounded-3xl overflow-hidden relative"
-              >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="absolute inset-0 size-full object-cover"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black/75 to-black/5" />
 
-                <button
-                  type="button"
-                  className="absolute top-3 right-3 size-10 rounded-full bg-white/95 grid place-items-center"
-                  aria-label="Favorite"
-                >
-                  <AppIcon name="favorite_border" className="size-5 text-gray-500" />
-                </button>
-
-                {item.badge && (
-                  <span
-                    className={`absolute top-3 left-0 px-2 py-1 text-[10px] font-bold rounded-r-full ${item.badgeClass ?? "bg-yellow-400 text-black"}`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-
-                <div className="absolute left-3 right-3 bottom-4 text-white">
-                  <p className="text-sm opacity-90">{item.category}</p>
-                  <p className="text-xl font-bold leading-tight">
-                    {item.title}
-                  </p>
-                </div>
-              </article>
+          <div className="dashboard-shortcuts" aria-label="Akses cepat">
+            {[
+              { label: 'Transfer', icon: 'swap_vert', route: '/app/transfer' },
+              { label: 'Riwayat', icon: 'history', route: '/app/history' },
+              { label: 'Voucher', icon: 'local_offer', route: '/app/voucher-games' },
+              { label: 'MitraPoints', icon: 'crown', route: '/app/account' },
+            ].map((item) => (
+              <button key={item.label} type="button" onClick={() => navigate(item.route)}>
+                <span><AppIcon name={item.icon} /></span>
+                <span>{item.label}</span>
+              </button>
             ))}
           </div>
         </section>
 
+        <div className="dashboard-content">
+          <section className="dashboard-support-banner" aria-label="Dukung UMKM Indonesia">
+            <div className="dashboard-support-copy">
+              <strong>DUKUNG<br />UMKM INDONESIA</strong>
+              <p>Belanja Produk Lokal,<br />Bangun Ekonomi Bangsa.</p>
+              <span>Mulai Belanja <AppIcon name="arrow_forward" /></span>
+            </div>
+            <div className="dashboard-support-landscape" aria-hidden="true">
+              <span>🇮🇩</span>
+              <i />
+            </div>
+          </section>
+
+          <section className="dashboard-section dashboard-services">
+            <div className="dashboard-section-heading">
+              <h2>Layanan Favorit</h2>
+              <span>Lihat Semua <AppIcon name="chevron_right" /></span>
+            </div>
+            <div className="dashboard-service-grid">
+              {PAYMENT_ITEMS.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => handlePaymentItemClick(item)}
+                  className={`dashboard-service-item ${item.bg}`}
+                >
+                  <span className="dashboard-service-icon">
+                    <AppIcon name={item.icon} className={item.color} />
+                  </span>
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="dashboard-section dashboard-promo-section" aria-label="Promo spesial MitraKami">
+            <div className="dashboard-section-heading">
+              <h2>Promo Spesial</h2>
+              <span>Lihat Semua <AppIcon name="chevron_right" /></span>
+            </div>
+            <div className="dashboard-promo-banner" aria-label="Promo cashback MitraKami">
+              <div className="dashboard-promo-offer"><strong>CASHBACK<br />HINGGA <b>50%</b></strong></div>
+              <div className="dashboard-promo-copy">Transaksi lebih hemat<br />untuk kebutuhan sehari-hari</div>
+              <span className="dashboard-promo-cta">Lihat Promo <AppIcon name="arrow_forward" /></span>
+              <div className="dashboard-promo-illustration" aria-hidden="true">
+                <span className="dashboard-promo-phone">MK</span>
+                <span className="dashboard-promo-gift" />
+                <span className="dashboard-promo-tag">%</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="dashboard-section dashboard-store-section">
+            <div className="dashboard-section-heading">
+              <h2>Mitra UMKM</h2>
+              <button type="button" className="dashboard-see-all">
+                Lihat Semua <AppIcon name="chevron_right" />
+              </button>
+            </div>
+            <div className="dashboard-store-list no-scrollbar">
+              {STORE_ITEMS.map((item) => (
+                <article key={item.title} className="dashboard-store-card">
+                  <img src={item.image} alt={item.title} />
+                  <div className="dashboard-store-shade" />
+                  <button type="button" className="dashboard-favorite" aria-label="Favorite">
+                    <AppIcon name="favorite_border" />
+                  </button>
+                  {item.badge && (
+                    <span className={`dashboard-store-badge ${item.badgeClass ?? ''}`}>
+                      {item.badge}
+                    </span>
+                  )}
+                  <div className="dashboard-store-copy">
+                    <p>{item.category}</p>
+                    <h3>{item.title}</h3>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+
         <MobileBottomNav currentTab={currentTab} />
       </div>
-    </div>
+    </main>
   );
 }

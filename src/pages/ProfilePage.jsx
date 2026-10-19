@@ -6,6 +6,8 @@ import { buildApiUrl } from '../services/apiClient'
 import MobileBottomNav from '../components/MobileBottomNav'
 import { resolvePackageAvatarPath } from '../utils/memberPackageAvatar'
 import AppIcon from '../components/AppIcon'
+import { Bell, Settings } from 'lucide-react'
+import './ProfilePage.css'
 
 const isLocalDevHost = () => {
   if (typeof window === 'undefined') return false
@@ -157,165 +159,118 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-app text-text-primary">
-      <div className="mx-auto w-full max-w-md min-h-screen bg-background-app relative overflow-hidden pb-24">
-        <header className="px-6 pt-10 pb-6 flex justify-between items-center border-b border-black/5 bg-background-app sticky top-0 z-10">
-          <h1 className="text-2xl font-bold">Profile</h1>
-          
+    <main className="profile-page">
+      <div className="profile-shell">
+        <header className="profile-header">
+          <div className="profile-header-sweep" aria-hidden="true" />
+          <div className="profile-brand" aria-label="MitraKami SuperApp">
+            <span className="profile-brand-mark">MK</span>
+            <span className="profile-brand-name">mitra<span>Kami</span><small>SUPERAPP</small></span>
+          </div>
+          <div className="profile-header-tools" aria-hidden="true">
+            <span><Bell /></span><span><Settings /></span>
+          </div>
+          <p className="profile-motto">Bersama MitraKami,<br />Membangun Indonesia.</p>
+          <div className="profile-heading">
+            <h1>Profil</h1>
+            <p>Kelola informasi akun Anda</p>
+          </div>
         </header>
 
-        <main className="px-5 pt-6 pb-8 space-y-5">
-          <section className="bg-white rounded-3xl p-6 shadow-soft border border-black/5">
-            <div className="flex flex-col items-center">
-              <div className="relative mb-3">
-                <img src={avatarDisplay} alt="Profile member" className="size-24 rounded-full object-cover border-4 border-background-app" />
-                
+        <div className="profile-content">
+          <section className="profile-member-card" aria-label="Profil member">
+            <div className="profile-member-main">
+              <img src={avatarDisplay} alt="Profile member" className="profile-avatar" />
+              <div className="profile-member-details">
+                <h2>{toDisplayValue(profile.memberName)}</h2>
+                <span className="profile-package-badge"><AppIcon name="badge" />{packageDisplay}</span>
+                <p className="profile-member-id-label">Member ID</p>
+                <p className="profile-member-id">{toDisplayValue(profile.memberId)}</p>
               </div>
+              <AppIcon name="chevron_right" className="profile-member-chevron" />
+            </div>
 
-              <h2 className="text-md font-bold leading-tight text-center">{toDisplayValue(profile.memberName)}</h2>
-              <p className="text-text-secondary text-md text-center mb-5">{toDisplayValue(profile.email)}</p>
-
-              <div className="w-full">
-                <div className="bg-background-app rounded-xl p-4 text-center">
-                  <p className="text-text-secondary text-sm mb-1">Total Saldo</p>
-                  <p className="text-primary text-xl font-bold">{formatCurrency(profile.walletBalance)}</p>
-                </div>
+            <div className="profile-member-stats">
+              <div className="profile-stat">
+                <AppIcon name="badge" />
+                <div><strong>{canUpgrade ? packageDisplay : 'Tertinggi'}</strong><span>Status Keanggotaan</span></div>
+              </div>
+              <div className="profile-stat">
+                <AppIcon name="favorite_border" />
+                <div><strong>{Number(profile.totalPv || 0).toLocaleString('id-ID')}</strong><span>MitraPoints</span></div>
+              </div>
+              <div className="profile-stat">
+                <AppIcon name="account_balance_wallet" />
+                <div><strong>{formatCurrency(profile.walletBalance)}</strong><span>Saldo</span></div>
               </div>
             </div>
           </section>
 
-          <section className="rounded-3xl px-5 py-4 bg-linear-to-r from-primary to-[#f2b632] text-white shadow-soft">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h3 className="text-lg font-bold">{packageDisplay}</h3>
-                <p className="text-sm text-white/90">{canUpgrade ? 'Unlock exclusive features & limits' : 'Paket tertinggi Anda aktif'}</p>
-              </div>
-              {canUpgrade ? (
-                <button type="button" className="bg-white text-primary rounded-full px-4 py-2 text-sm font-bold">
-                  Upgrade
-                </button>
-              ) : (
-                <span className="bg-white/20 rounded-full px-3 py-2 text-xs font-bold uppercase tracking-wider">Tertinggi</span>
-              )}
-            </div>
-          </section>
-
-          <section className="bg-white rounded-3xl p-2 shadow-soft border border-black/5">
-            <p className="px-4 pt-3 pb-2 text-xs font-bold text-text-secondary uppercase tracking-[0.12em]">Akun</p>
-            <button
-              type="button"
-              onClick={() => setShowPersonalInfo((prev) => !prev)}
-              className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-background-app transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-blue-100 text-blue-600 grid place-items-center">
-                  <AppIcon name="person" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold">Informasi Pribadi</p>
-                  <p className="text-sm text-text-secondary">Data akun pengguna</p>
-                </div>
-              </div>
-              <AppIcon
-                name={showPersonalInfo ? 'expand_less' : 'chevron_right'}
-                className="size-4 text-text-secondary"
-              />
+          <section className="profile-menu-card" aria-label="Pengaturan akun">
+            <button type="button" onClick={() => setShowPersonalInfo((prev) => !prev)} className="profile-menu-row">
+              <AppIcon name="person" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Informasi Pribadi</strong><small>Nama, email, nomor telepon</small></span>
+              <AppIcon name={showPersonalInfo ? 'expand_less' : 'chevron_right'} className="profile-menu-chevron" />
             </button>
-
-            <button type="button" className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-background-app transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-green-100 text-green-600 grid place-items-center">
-                  <AppIcon name="account_balance_wallet" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold">Metode Pembayaran</p>
-                  <p className="text-sm text-text-secondary">Rekening bank</p>
-                </div>
-              </div>
-              <AppIcon name="chevron_right" className="size-4 text-text-secondary" />
-            </button>
-
             {showPersonalInfo && (
-              <div className="px-4 pb-4 grid grid-cols-1 gap-3">
+              <div className="profile-info-grid">
                 {PROFILE_INFO_FIELDS.map((field) => (
-                  <div key={field.key} className="bg-background-app rounded-2xl p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <AppIcon name={field.icon} className="size-4 text-text-secondary" />
-                      <p className="text-xs text-text-secondary uppercase tracking-wider">{field.label}</p>
-                    </div>
-                    <p className="text-sm font-bold wrap-break-word">{toDisplayValue(profile[field.key])}</p>
+                  <div key={field.key} className="profile-info-item">
+                    <div><AppIcon name={field.icon} /><span>{field.label}</span></div>
+                    <strong>{toDisplayValue(profile[field.key])}</strong>
                   </div>
                 ))}
               </div>
             )}
-          </section>
 
-          <section className="bg-white rounded-4xl p-2 shadow-soft border border-black/5">
-            <p className="px-4 pt-3 pb-2 text-xs font-bold text-text-secondary uppercase tracking-[0.12em]">Security</p>
-            <button type="button" className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-background-app transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-orange-100 text-orange-600 grid place-items-center">
-                  <AppIcon name="lock" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold">Pengaturan Keamanan</p>
-                  <p className="text-sm text-text-secondary">PIN, FaceID, Kata Sandi</p>
-                </div>
-              </div>
-              <AppIcon name="chevron_right" className="size-4 text-text-secondary" />
+            <button type="button" className="profile-menu-row">
+              <AppIcon name="privacy_tip" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Keamanan Akun</strong><small>Ubah kata sandi, verifikasi dua langkah</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
             </button>
 
-            <button type="button" className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-background-app transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-purple-100 text-purple-600 grid place-items-center">
-                  <AppIcon name="privacy_tip" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold">Data & Privasi</p>
-                  <p className="text-sm text-text-secondary">Atur penggunaan data Anda</p>
-                </div>
-              </div>
-              <AppIcon name="chevron_right" className="size-4 text-text-secondary" />
+            <button type="button" className="profile-menu-row">
+              <AppIcon name="account_balance_wallet" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Metode Pembayaran</strong><small>Rekening bank, e-wallet, kartu</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
+            </button>
+
+            <button type="button" className="profile-menu-row">
+              <AppIcon name="home" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Data & Privasi</strong><small>Atur penggunaan data Anda</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
             </button>
           </section>
 
-          <section className="bg-white rounded-4xl p-2 shadow-soft border border-black/5">
-            <p className="px-4 pt-3 pb-2 text-xs font-bold text-text-secondary uppercase tracking-[0.12em]">Lainnya</p>
-            <button type="button" className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-background-app transition-colors">
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-gray-100 text-gray-600 grid place-items-center">
-                  <AppIcon name="help" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold">Pusat Bantuan</p>
-                  <p className="text-sm text-text-secondary">FAQ, Hubungi Dukungan</p>
-                </div>
-              </div>
-              <AppIcon name="chevron_right" className="size-4 text-text-secondary" />
+          <section className="profile-menu-card profile-other-card" aria-label="Bantuan dan akun">
+            <button type="button" className="profile-menu-row">
+              <AppIcon name="help" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Pusat Bantuan</strong><small>FAQ, hubungi kami</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
             </button>
+
+            <div className="profile-menu-row profile-about-row">
+              <AppIcon name="id_card" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>Tentang MitraKami</strong><small>Versi aplikasi 1.0.0</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
+            </div>
 
             <button
               type="button"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="w-full flex items-center justify-between p-4 rounded-3xl hover:bg-red-50 transition-colors disabled:opacity-60"
+              className="profile-menu-row profile-logout-row"
             >
-              <div className="flex items-center gap-3">
-                <span className="size-10 rounded-full bg-red-100 text-red-600 grid place-items-center">
-                  <AppIcon name="logout" className="size-5" />
-                </span>
-                <div className="text-left">
-                  <p className="font-bold text-red-600">{isLoggingOut ? 'Keluar...' : 'Keluar'}</p>
-                </div>
-              </div>
+              <AppIcon name="logout" className="profile-menu-icon" />
+              <span className="profile-menu-copy"><strong>{isLoggingOut ? 'Keluar...' : 'Keluar'}</strong><small>Keluar dari akun ini</small></span>
+              <AppIcon name="chevron_right" className="profile-menu-chevron" />
             </button>
           </section>
 
-          <p className="text-center text-sm text-text-secondary py-2">Version 1.0.0</p>
-        </main>
+        </div>
 
         <MobileBottomNav currentTab="account" />
       </div>
-    </div>
+    </main>
   )
 }
