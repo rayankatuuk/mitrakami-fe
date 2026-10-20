@@ -6,6 +6,10 @@ import { buildApiUrl } from "../services/apiClient";
 import MobileBottomNav from "../components/MobileBottomNav";
 import { resolvePackageAvatarPath } from "../utils/memberPackageAvatar";
 import AppIcon from "../components/AppIcon";
+import {
+  normalizeTopUpHistoryTransaction,
+  resolveTopUpHistoryRoute,
+} from "../utils/topupHistoryMapper";
 import { Bell, Plus, ScanLine } from "lucide-react";
 import "./DashboardPage.css";
 
@@ -112,6 +116,19 @@ const STORE_ITEMS = [
 ];
 
 const formatCurrency = (value) => `Rp ${Number(value).toLocaleString("id-ID")}`;
+const transactionDateFormatter = new Intl.DateTimeFormat("id-ID", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+const formatTransactionDate = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : transactionDateFormatter.format(date);
+};
 
 const normalizePackageSuffix = (packageName) => {
   if (!packageName) return "Member";
@@ -136,7 +153,27 @@ export default function DashboardPage({ currentTab = "home" }) {
   const navigate = useNavigate();
   const [authSession, setAuthSessionState] = useState(() => getAuthSession());
   const [isBalanceVisible, setIsBalanceVisible] = useState(false);
+  const [recentTransaction, setRecentTransaction] = useState(null);
   const hasTriedRealtimeSync = useRef(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const now = new Date();
+    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+    mitrakamiApi.getTransactionHistory({ month, filter_type: "all", page: 1 })
+      .then((payload) => {
+        const transactions = Array.isArray(payload?.transactions) ? payload.transactions : [];
+        if (isMounted) setRecentTransaction(transactions[0] ?? null);
+      })
+      .catch(() => {
+        if (isMounted) setRecentTransaction(null);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -229,6 +266,39 @@ export default function DashboardPage({ currentTab = "home" }) {
 
     navigate(item.route);
   };
+
+  const handleRecentTransactionClick = () => {
+    if (!recentTransaction) return;
+    const topUpTransaction = normalizeTopUpHistoryTransaction(recentTransaction);
+
+    if (topUpTransaction) {
+      navigate(resolveTopUpHistoryRoute(topUpTransaction.status), {
+        state: { from: "/app/history", transaction: topUpTransaction },
+      });
+      return;
+    }
+
+    if (recentTransaction.id && recentTransaction.reference) {
+      navigate("/app/history/transaction", {
+        state: { from: "/app/history", transaction: recentTransaction },
+      });
+    } else {
+      navigate("/app/history");
+    }
+  };
+
+  const recentTransactionStatus = String(recentTransaction?.status || "").toLowerCase();
+  const recentStatusLabel = {
+    success: "Berhasil",
+    pending: "Diproses",
+    failed: "Gagal",
+  }[recentTransactionStatus] || recentTransaction?.status || "-";
+  const recentTransactionLabel = `${recentTransaction?.category || ""} ${recentTransaction?.title || ""}`.toLowerCase();
+  const recentTransactionIcon = recentTransactionLabel.includes("pulsa")
+    ? "smartphone"
+    : recentTransactionLabel.includes("transfer")
+      ? "swap_vert"
+      : "receipt_long";
 
   return (
     <main className="dashboard-page">
@@ -348,6 +418,35 @@ export default function DashboardPage({ currentTab = "home" }) {
                 <span className="dashboard-promo-tag">%</span>
               </div>
             </div>
+          </section>
+
+          <section className="dashboard-section dashboard-recent-section" aria-label="Transaksi terakhir">
+            <div className="dashboard-section-heading">
+              <h2>Transaksi Terakhir</h2>
+              <button type="button" className="dashboard-see-all" onClick={() => navigate("/app/history")}>
+                Lihat Semua <AppIcon name="chevron_right" />
+              </button>
+            </div>
+            {recentTransaction ? (
+              <button type="button" className="dashboard-recent-card" onClick={handleRecentTransactionClick}>
+                <span className="dashboard-recent-icon"><AppIcon name={recentTransactionIcon} /></span>
+                <span className="dashboard-recent-details">
+                  <strong>{recentTransaction.title || recentTransaction.category_label || "Transaksi"}</strong>
+                  <span>{recentTransaction.counterparty || recentTransaction.category_label || "Transaksi MitraKami"}</span>
+                  <small>{formatTransactionDate(recentTransaction.created_at || recentTransaction.createdAt)}</small>
+                </span>
+                <span className="dashboard-recent-summary">
+                  <strong>{formatCurrency(recentTransaction.amount ?? recentTransaction.totalAmount ?? 0)}</strong>
+                  <small className={`dashboard-recent-status is-${recentTransactionStatus || "unknown"}`}>
+                    <AppIcon name={recentTransactionStatus === "success" ? "check_circle" : "schedule"} />
+                    {recentStatusLabel}
+                  </small>
+                </span>
+                <AppIcon name="chevron_right" className="dashboard-recent-chevron" />
+              </button>
+            ) : (
+              <div className="dashboard-recent-empty">Belum ada transaksi bulan ini.</div>
+            )}
           </section>
 
           <section className="dashboard-section dashboard-store-section">

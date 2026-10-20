@@ -737,6 +737,131 @@
   transform: rotate(12deg);
 }
 
+.dashboard-recent-section {
+  margin-top: 17px;
+}
+
+.dashboard-recent-card {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(17, 24, 39, 0.04);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 3px 14px rgba(22, 28, 45, 0.06);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dashboard-recent-icon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff0f0;
+  color: #d81419;
+}
+
+.dashboard-recent-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.4;
+}
+
+.dashboard-recent-details {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard-recent-details strong {
+  overflow: hidden;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-recent-details > span,
+.dashboard-recent-details small {
+  overflow: hidden;
+  color: #737d8e;
+  font-size: 11px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-recent-summary {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.dashboard-recent-summary > strong {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dashboard-recent-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #e9f8ee;
+  color: #179447;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dashboard-recent-status.is-pending {
+  background: #fff4dd;
+  color: #b77906;
+}
+
+.dashboard-recent-status.is-failed {
+  background: #ffeded;
+  color: #cf3131;
+}
+
+.dashboard-recent-status svg {
+  width: 13px;
+  height: 13px;
+}
+
+.dashboard-recent-chevron {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  color: #8992a1;
+}
+
+.dashboard-recent-empty {
+  padding: 18px 14px;
+  border: 1px solid rgba(17, 24, 39, 0.05);
+  border-radius: 16px;
+  background: #fff;
+  color: #737d8e;
+  font-size: 12px;
+  text-align: center;
+}
+
 .dashboard-store-section {
   margin-right: -15px;
 }
