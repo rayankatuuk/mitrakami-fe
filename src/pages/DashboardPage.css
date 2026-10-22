@@ -16,7 +16,7 @@
 
 .dashboard-hero {
   position: relative;
-  height: 178px;
+  height: 150px;
   overflow: hidden;
   padding: 28px 18px 0;
   border-radius: 0 0 28px 28px;
@@ -144,7 +144,7 @@
   position: relative;
   flex: 1 1 42%;
   min-width: 0;
-  padding-top: 25px;
+  padding-top: 23px;
 }
 
 .dashboard-wordmark {
@@ -155,13 +155,32 @@
 
 .dashboard-wordmark > span {
   display: block;
-  font-size: clamp(19px, 5.6vw, 26px);
   font-weight: 850;
-  letter-spacing: -1.5px;
+  line-height: 1;
+}
+
+.dashboard-brand-mark {
+  width: 43px;
+  height: 34px;
+  margin: 0 auto 2px;
+  color: #f8df9f;
+  font-size: 32px;
+  font-style: italic;
+  letter-spacing: -8px;
+  text-shadow: 1px 2px 0 #9d160d;
+}
+
+.dashboard-brand-mark span {
+  color: #fff;
+}
+
+.dashboard-wordmark > .dashboard-brand-name {
+  font-size: clamp(17px, 4.7vw, 22px);
+  letter-spacing: -1.2px;
   line-height: 0.95;
 }
 
-.dashboard-wordmark > span > span {
+.dashboard-brand-name > span {
   color: #f2c875;
 }
 
@@ -207,7 +226,7 @@
 
 .dashboard-motto {
   position: absolute;
-  bottom: 28px;
+  bottom: 16px;
   left: 20px;
   z-index: 1;
   margin: 0;
@@ -221,7 +240,7 @@
 .dashboard-balance-card {
   position: relative;
   z-index: 2;
-  margin: -37px 15px 14px;
+  margin: -35px 15px 14px;
   padding: 15px 14px 12px;
   border: 1px solid rgba(163, 114, 44, 0.12);
   border-radius: 23px;
