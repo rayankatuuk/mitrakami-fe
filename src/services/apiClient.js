@@ -4,6 +4,7 @@ import { clearAuthSession, getAuthSession } from '../utils/authStorage'
 const rawApiBaseUrl = (import.meta.env.VITE_PRIME_API_BASE_URL || '').trim()
 export const API_BASE_URL = rawApiBaseUrl.replace(/\/+$/, '')
 const SANCTUM_BASE_URL = API_BASE_URL.replace(/\/api$/i, '')
+const IS_CAPACITOR = import.meta.env.MODE === 'capacitor'
 
 let csrfFetched = false
 
@@ -36,6 +37,11 @@ const getXsrfTokenFromCookie = () => {
 }
 
 export const ensureCsrfCookie = async ({ force = false } = {}) => {
+  // Native Capacitor HTTP requests use bearer authentication. A WebView served
+  // from https://localhost cannot read the API host's XSRF-TOKEN cookie, and
+  // cross-origin cookie CSRF is unnecessary for the token-authenticated API.
+  if (IS_CAPACITOR) return
+
   if (csrfFetched && !force) return
 
   const endpoint = SANCTUM_BASE_URL

@@ -2,10 +2,13 @@ import apiClient, { ensureCsrfCookie } from './apiClient'
 
 export const mitrakamiApi = {
   loginMember: async ({ distributorId, password, remember = false }) => {
-    try {
-      await ensureCsrfCookie()
-    } catch {
-      // Some deployments may not require CSRF preflight for API login.
+    if (import.meta.env.MODE !== 'capacitor') {
+      try {
+        await ensureCsrfCookie()
+      } catch {
+        // Browser deployments may use Sanctum cookies; token APIs can still
+        // accept login without the optional CSRF preflight.
+      }
     }
 
     const { data: loginData } = await apiClient.post('/api/auth/login', {
