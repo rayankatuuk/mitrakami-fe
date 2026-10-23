@@ -18,9 +18,124 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <title>Mitrakami - MitraKami SuperApp Solusi Pembayaran Terbaik, UMKM Naik Level.</title>
+  <style>
+    #startup-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: #850000;
+      opacity: 1;
+      transition: opacity 280ms ease;
+    }
+
+    #startup-splash .startup-splash-art {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: max(100vw, 56.28vh);
+      width: max(100vw, 56.28dvh);
+      height: max(100vh, 177.68vw);
+      height: max(100dvh, 177.68vw);
+      overflow: hidden;
+      flex: none;
+      transform: translate(-50%, -50%);
+    }
+
+    #startup-splash .startup-splash-art > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+
+    #startup-splash .startup-progress-circle {
+      position: absolute;
+      left: 50%;
+      top: 63.2%;
+      width: 36px;
+      height: 36px;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 2px 4px rgba(126, 48, 10, 0.2));
+    }
+
+    #startup-splash .startup-progress-circle svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    #startup-splash .startup-progress-track {
+      fill: none;
+      stroke: rgba(194, 145, 58, 0.34);
+      stroke-width: 3.5;
+    }
+
+    #startup-splash .startup-progress-fill {
+      fill: none;
+      stroke: url(#startup-progress-gradient);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-dasharray: 113.097;
+      stroke-dashoffset: 113.097;
+    }
+
+    #startup-splash.is-ready .startup-progress-circle {
+      opacity: 1;
+    }
+
+    #startup-splash.is-ready .startup-progress-fill {
+      animation: startup-circle-fill 2.1s cubic-bezier(0.2, 0.72, 0.24, 1) forwards;
+    }
+
+    @keyframes startup-circle-fill {
+      to { stroke-dashoffset: 0; }
+    }
+
+    #startup-splash.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (orientation: landscape) {
+      #startup-splash .startup-progress-circle {
+        top: calc(50% + 27dvh);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #startup-splash { transition: none; }
+      #startup-splash.is-ready .startup-progress-fill { animation-duration: 180ms; }
+    }
+  </style>
 </head>
 
 <body class="bg-background-app text-text-primary font-display antialiased">
+  <div id="startup-splash">
+    <div class="startup-splash-art">
+      <img src="/mitrakami-splash.png" alt="MitraKami SuperApp" />
+      <div class="startup-progress-circle" role="progressbar" aria-label="Memuat MitraKami" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="startup-progress-gradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#a40b10" />
+              <stop offset="0.52" stop-color="#ec1d24" />
+              <stop offset="1" stop-color="#d39a34" />
+            </linearGradient>
+          </defs>
+          <circle class="startup-progress-track" cx="24" cy="24" r="18" />
+          <circle class="startup-progress-fill" cx="24" cy="24" r="18" />
+        </svg>
+      </div>
+    </div>
+  </div>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
