@@ -320,7 +320,8 @@ export default function DashboardPage({ currentTab = "home" }) {
 
             <div className="dashboard-brand-tools">
               <div className="dashboard-wordmark" aria-label="MitraKami SuperApp">
-                <span>Mitra<span>Kami</span></span>
+                <span className="dashboard-brand-mark" aria-hidden="true">M<span>K</span></span>
+                <span className="dashboard-brand-name">Mitra<span>Kami</span></span>
                 <small>SUPERAPP</small>
               </div>
               <div className="dashboard-utility-icons" aria-hidden="true">
